@@ -78,7 +78,7 @@ namespace Back_Patient.Controllers
             return CreatedAtAction("GetPatient", new {id = createdPatient.PatientId}, createdPatient);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePatient(int id)
         {
             var patient = await _repository.GetPatientByIdAsync(id);
