@@ -1,0 +1,45 @@
+﻿@using Model
+@using Services
+
+@page "/patients"
+
+@inject PatientService PatientService
+
+<h3>Liste des patients</h3>
+
+<button @onclick="NavigateToAddPatient" class="btn btn-primary mb-3">Ajouter patient</button>
+
+@if (patients == null)
+{
+    <p>Chargement...</p>
+}
+else
+{
+    <ul>
+        @foreach (var patient in patients)
+        {
+            <li>
+                <a href="@($"/patients/{patient.PatientId}")">
+                    @patient.FirstName @patient.Name @patient.Birthday
+                </a>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    List<PatientDTO>? patients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        patients = await PatientService.GetAllPatientsAsync();
+    }
+
+    void NavigateToAddPatient()
+    {
+        NavigationManager.NavigateTo("/patients/add");
+    }
+
+    [Inject]
+    NavigationManager NavigationManager { get; set; } = default!;
+}

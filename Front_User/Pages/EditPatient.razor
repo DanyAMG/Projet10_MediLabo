@@ -1,0 +1,34 @@
+﻿@using Model
+@using Services
+@using Microsoft.AspNetCore.Components.Forms
+
+@page "/patients/Edit"
+
+@inject PatientService PatientService
+@inject NavigationManager NavigationManager
+
+<h3>EditPatient</h3>
+
+@if (!isEditMode)
+{
+	<p><strong>Nom :</strong> @patient.Name</p>
+	<p><strong>Prénom :</strong> @patient.FirstName</p>
+	<p><strong>Date de naissance :</strong> @patient.Birthday.ToShortDateString()</p>
+	<p><strong>Adresse :</strong> @patient.Adress</p>
+	<p><strong>Téléphone :</strong> @patient.PhoneNumber</p>
+	<p><strong>Genre :</strong> @patient.Gender</p>
+
+	<button class="btn btn-primary" @onclick="() => isEditMode = true">Éditer</button>
+}
+
+@code {
+	private bool isEditMode = false;
+
+	private PatientDTO patient = new();
+	private EditContext editContext;
+
+	protected override async Task OnInitializedAsync()
+	{
+		editContext = new EditContext(patient);
+	}
+}

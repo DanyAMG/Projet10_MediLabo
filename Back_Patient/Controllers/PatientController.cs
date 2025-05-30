@@ -5,8 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace Back_Patient.Controllers
 {
-    [Route("api/[controller]")]
+    
     [ApiController]
+    [Route("api/patients")]
     public class PatientController : ControllerBase
     {
         private readonly IPatientRepository _repository;
@@ -42,7 +43,7 @@ namespace Back_Patient.Controllers
             return Ok(patient);
         }
 
-        [HttpPut("{id")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutPatient(int id, Patient patient)
         {
             var existingPatient = await _repository.GetPatientByIdAsync(id);
@@ -57,13 +58,14 @@ namespace Back_Patient.Controllers
             existingPatient.Adress = patient.Adress;
             existingPatient.Birthday = patient.Birthday;
             existingPatient.PhoneNumber = patient.PhoneNumber;
+            existingPatient.Gender = patient.Gender;
 
             await _repository.UpdatePatientAsync(existingPatient);
             return Ok(existingPatient);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostPatient(Patient patientDTO)
+        public async Task<IActionResult> PostPatient([FromBody]Patient patientDTO)
         {
             var patient = new Patient
             {
@@ -72,10 +74,11 @@ namespace Back_Patient.Controllers
                 Adress = patientDTO.Adress,
                 Birthday = patientDTO.Birthday,
                 PhoneNumber = patientDTO.PhoneNumber,
+                Gender =patientDTO.Gender,
             };
 
             var createdPatient = await _repository.CreatePatientAsync(patient);
-            return CreatedAtAction("GetPatient", new {id = createdPatient.PatientId}, createdPatient);
+            return Ok();
         }
 
         [HttpDelete("{id}")]

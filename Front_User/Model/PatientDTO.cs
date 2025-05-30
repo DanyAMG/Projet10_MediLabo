@@ -1,14 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Back_Patient.Model
+namespace Frontend.Model
 {
-    public class Patient
+    public class PatientDTO
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PatientId { get; set; }
-
+        
         [Required]
         public string FirstName { get; set; }
 
@@ -21,8 +18,8 @@ namespace Back_Patient.Model
         [Required]
         public bool Gender { get; set; }
 
-        public string Adress {  get; set; }
-        
+        public string Adress { get; set; }
+
         public string PhoneNumber { get; set; }
     }
 }

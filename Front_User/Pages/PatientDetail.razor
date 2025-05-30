@@ -1,0 +1,98 @@
+﻿@using Model
+@using Services
+@using Microsoft.AspNetCore.Components.Forms
+
+@page "/patients/{Id:int}"
+@inject PatientService PatientService
+@inject NavigationManager NavigationManager
+
+<h3>Détails du Patient</h3>
+
+@if (patient == null)
+{
+    <p>Chargement...</p>
+}
+else
+{
+    @if (!isEditMode)
+    {
+        <p><strong>Nom :</strong> @patient.Name</p>
+        <p><strong>Prénom :</strong> @patient.FirstName</p>
+        <p><strong>Date de naissance :</strong> @patient.Birthday.ToShortDateString()</p>
+        <p><strong>Adresse :</strong> @patient.Adress</p>
+        <p><strong>Téléphone :</strong> @patient.PhoneNumber</p>
+        <p><strong>Genre :</strong> @(patient.Gender ? "Homme" : "Femme")</p>
+
+        <button class="btn btn-primary" @onclick="() => isEditMode = true">Éditer</button>
+    }
+    else
+    {
+        <EditForm Model="@patient" OnValidSubmit="HandleUpdatePatient">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Nom</label>
+                <InputText id="name" class="form-control" @bind-Value="patient.Name" />
+            </div>
+
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Prénom</label>
+                <InputText id="firstName" class="form-control" @bind-Value="patient.FirstName" />
+            </div>
+
+            <div class="mb-3">
+                <label for="adress" class="form-label">Adresse</label>
+                <InputText id="adress" class="form-control" @bind-Value="patient.Adress" />
+            </div>
+
+            <div class="mb-3">
+                <label for="birthday" class="form-label">Date de naissance</label>
+                <InputDate id="birthday" class="form-control" @bind-Value="patient.Birthday" />
+            </div>
+
+            <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Téléphone</label>
+                <InputText id="phoneNumber" class="form-control" @bind-Value="patient.PhoneNumber" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Genre</label>
+                <div>
+                    <InputRadioGroup @bind-Value="patient.Gender">
+                        <InputRadio class="form-check-input" Value="true" id="homme" />
+                        <label class="form-check-label me-3" for="homme">Homme</label>
+
+                        <InputRadio class="form-check-input" Value="false" id="femme" />
+                        <label class="form-check-label" for="femme">Femme</label>
+                    </InputRadioGroup>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Sauvegarder</button>
+            <button type="button" class="btn btn-secondary ms-2" @onclick="() => isEditMode = false">Annuler</button>
+        </EditForm>
+    }
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private PatientDTO? patient;
+    private bool isEditMode = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        patient = await PatientService.GetPatientByIdAsync(Id);
+    }
+
+    private async Task HandleUpdatePatient()
+    {
+        if (patient != null)
+        {
+            await PatientService.EditPatientAsync(patient.PatientId, patient);
+            isEditMode = false;
+        }
+    }
+}

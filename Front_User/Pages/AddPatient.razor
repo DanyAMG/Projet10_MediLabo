@@ -1,0 +1,71 @@
+﻿@using Model
+@using Services
+@using Microsoft.AspNetCore.Components.Forms
+
+@page "/patients/add"
+
+@inject PatientService PatientService
+@inject NavigationManager NavigationManager
+
+<h3>Ajouter un patient</h3>
+
+<EditForm Model="newPatient" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="firstName" class="form-label">Prénom</label>
+        <InputText id="firstName" class="form-control" @bind-Value="newPatient.FirstName" />
+    </div>
+
+    <div class="mb-3">
+        <label for="name" class="form-label">Nom</label>
+        <InputText id="name" class="form-control" @bind-Value="newPatient.Name" />
+    </div>
+
+    <div class="mb-3">
+        <label for="adress" class="form-label">Adresse</label>
+        <InputText id="adress" class="form-control" @bind-Value="newPatient.Adress" />
+    </div>
+
+    <div class="mb-3">
+        <label for="birthday" class="form-label">Date de naissance</label>
+        <InputDate id="birthday" class="form-control" @bind-Value="newPatient.Birthday"  />
+    </div>
+
+    <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Téléphone</label>
+        <InputText id="phoneNumber" class="form-control" @bind-Value="newPatient.PhoneNumber" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Genre</label>
+        <div>
+            <InputRadioGroup @bind-Value="newPatient.Gender">
+                <InputRadio class="form-check-input" Value="true" id="homme" />
+                <label class="form-check-label me-3" for="homme">Homme</label>
+
+                <InputRadio class="form-check-input" Value="false" id="femme" />
+                <label class="form-check-label" for="femme">Femme</label>
+            </InputRadioGroup>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success me-2">Valider</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Annuler</button>
+</EditForm>
+
+@code {
+    private PatientDTO newPatient = new PatientDTO();
+
+    private async Task HandleValidSubmit()
+    {
+        await PatientService.AddPatientAsync(newPatient);
+        NavigationManager.NavigateTo("/patients");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/patients");
+    }
+}
