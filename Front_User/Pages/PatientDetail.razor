@@ -24,6 +24,8 @@ else
         <p><strong>Genre :</strong> @(patient.Gender ? "Homme" : "Femme")</p>
 
         <button class="btn btn-primary" @onclick="() => isEditMode = true">Éditer</button>
+
+        <PatientNotes PatientId="@patient.PatientId" />
     }
     else
     {
@@ -72,6 +74,8 @@ else
             <button type="submit" class="btn btn-success">Sauvegarder</button>
             <button type="button" class="btn btn-secondary ms-2" @onclick="() => isEditMode = false">Annuler</button>
         </EditForm>
+
+        
     }
 }
 
@@ -82,10 +86,10 @@ else
     private PatientDTO? patient;
     private bool isEditMode = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-        patient = await PatientService.GetPatientByIdAsync(Id);
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		patient = await PatientService.GetPatientByIdAsync(Id);
+	}
 
     private async Task HandleUpdatePatient()
     {

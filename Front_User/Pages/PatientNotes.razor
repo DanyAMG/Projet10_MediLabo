@@ -1,0 +1,105 @@
+﻿@using Model
+@using Services
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject NoteService NoteService
+
+<h3>Notes du patient</h3>
+
+@if (notes == null)
+{
+    <p>Chargement des notes...</p>
+}
+else if (!notes.Any())
+{
+    <p>Aucune note trouvée.</p>
+}
+else
+{
+    <ul>
+        @foreach (var note in notes)
+        {
+            <div class="card mb-2 p-2"></div>
+            <p><strong>@note.CreatedAt:</strong> @note.Content</p>
+            <button class="btn btn-warning btn-sm" @onclick="() => EditNote(note)">Modifier</button>
+        }
+    </ul>
+}
+
+@if (isEditing)
+{
+    <EditForm Model="@editingNote" OnValidSubmit="HandleEditSubmit">
+        <InputTextArea @bind-Value="editingNote.Content" class="form-control" />
+        <button type="submit" class="btn btn-success mt-2">Enregistrer</button>
+        <button type="button" class="btn btn-secondary mt-2 ms-2" @onclick="() => isEditing = false">Annuler</button>
+    </EditForm>
+}
+
+<button class="btn btn-primary" @onclick="ShowAddForm">
+    Ajouter une note
+</button>
+@if (showForm)
+{
+    <EditForm Model="newNote" OnValidSubmit="HandleValidSubmit">
+        <InputTextArea class="form-control" @bind-Value="newNote.Content" />
+        <ValidationMessage For="@(() => newNote.Content)" />
+        <button type="submit" class="btn btn-success mt-2">Enregistrer</button>
+    </EditForm>
+}
+
+
+@code {
+    [Parameter] public int PatientId { get; set; }
+
+    private List<NoteDTO> notes;
+    private bool showForm = false;
+    private NoteDTO newNote = new();
+    private NoteDTO editingNote = new();
+    private bool isEditing = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNotes();
+    }
+
+    void ShowAddForm()
+    {
+        showForm = !showForm;
+        newNote = new NoteDTO
+        {
+        PatientId = PatientId
+
+        };
+    }
+
+    async Task HandleValidSubmit()
+    {
+        await NoteService.AddNoteToPatientAsync(newNote);
+        showForm = false;
+        await LoadNotes();
+    }
+
+    private void EditNote(NoteDTO note)
+    {
+        editingNote = new NoteDTO
+            {
+                Id = note.Id,
+                Content = note.Content,
+                PatientId = note.PatientId,
+                CreatedAt = note.CreatedAt
+            };
+        isEditing = true;
+    }
+
+    private async Task HandleEditSubmit()
+    {
+        await NoteService.EditNoteAsync(editingNote.Id, editingNote);
+        isEditing = false;
+        await LoadNotes();
+    }
+
+    private async Task LoadNotes()
+    {
+        notes = await NoteService.GetAllNotesByPatientIdAsync(PatientId); 
+    }
+}

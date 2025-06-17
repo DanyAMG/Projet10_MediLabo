@@ -9,5 +9,6 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7047/") });
 builder.Services.AddScoped<PatientService>();
+builder.Services.AddScoped<NoteService>();
 
 await builder.Build().RunAsync();

@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway_Ocelot", "Gateway_O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Front_User\Frontend.csproj", "{0D8190DA-9F7E-4616-BB97-8EEDFA3D0F2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Back_Notes", "Back_Notes\Back_Notes.csproj", "{B67C525D-769D-4B82-AD5B-1355B7A4BB06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth_Service", "Auth_Service\Auth_Service.csproj", "{E28F0E99-3B1C-4825-B1F8-5EC03E266D23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{0D8190DA-9F7E-4616-BB97-8EEDFA3D0F2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D8190DA-9F7E-4616-BB97-8EEDFA3D0F2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D8190DA-9F7E-4616-BB97-8EEDFA3D0F2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B67C525D-769D-4B82-AD5B-1355B7A4BB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B67C525D-769D-4B82-AD5B-1355B7A4BB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B67C525D-769D-4B82-AD5B-1355B7A4BB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B67C525D-769D-4B82-AD5B-1355B7A4BB06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E28F0E99-3B1C-4825-B1F8-5EC03E266D23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E28F0E99-3B1C-4825-B1F8-5EC03E266D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E28F0E99-3B1C-4825-B1F8-5EC03E266D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E28F0E99-3B1C-4825-B1F8-5EC03E266D23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
