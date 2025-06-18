@@ -1,0 +1,6 @@
+@Back_RapportRisque_HostAddress = http://localhost:5141
+
+GET {{Back_RapportRisque_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

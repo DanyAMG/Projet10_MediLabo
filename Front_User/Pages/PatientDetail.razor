@@ -25,6 +25,7 @@ else
 
         <button class="btn btn-primary" @onclick="() => isEditMode = true">Éditer</button>
 
+        <PatientRisk PatientId="@patient.PatientId" />
         <PatientNotes PatientId="@patient.PatientId" />
     }
     else

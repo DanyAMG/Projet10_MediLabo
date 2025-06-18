@@ -1,0 +1,40 @@
+﻿@using Frontend.Services
+@using Frontend.Model
+@inject RiskService RiskService
+
+@if (isLoading)
+{
+    <p>Chargement du risque...</p>
+}
+else if (!string.IsNullOrEmpty(Risk))
+{
+    <p><strong>Risque du patient :</strong> @Risk</p>
+}
+else
+{
+    <p>Aucune donnée disponible.</p>
+}
+
+@code {
+    [Parameter]
+    public int PatientId { get; set; }
+
+    private string? Risk;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Risk = await RiskService.AssessPatientRiskAsync(PatientId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erreur de récupération du risque : {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

@@ -53,7 +53,7 @@
 
     {
       "DownstreamPathTemplate": "/api/notes/patient/{patientId}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -62,8 +62,19 @@
       ],
       "UpstreamPathTemplate": "/notes/patient/{patientId}",
       "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/risk/{patientId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7149
+        }
+      ],
+      "UpstreamPathTemplate": "/risk/{patientId}",
+      "UpstreamHttpMethod": [ "GET", "OPTIONS" ]
     }
-
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:7047"
