@@ -7,9 +7,9 @@ namespace Frontend.Services
     {
         private readonly HttpClient _httpClient;
 
-        public NoteService(HttpClient httpClient)
+        public NoteService(IHttpClientFactory httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient.CreateClient("AuthenticatedClient");
         }
 
         public async Task<List<NoteDTO>>GetAllNotesByPatientIdAsync(int patientId)

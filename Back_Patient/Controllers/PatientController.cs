@@ -1,5 +1,6 @@
-﻿using Back_Patient.Repositories;
-using Back_Patient.Model;
+﻿using Back_Patient.Model;
+using Back_Patient.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
 
@@ -42,7 +43,7 @@ namespace Back_Patient.Controllers
 
             return Ok(patient);
         }
-
+        [Authorize(Roles = "Operateur")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPatient(int id, Patient patient)
         {
@@ -63,7 +64,7 @@ namespace Back_Patient.Controllers
             await _repository.UpdatePatientAsync(existingPatient);
             return Ok(existingPatient);
         }
-
+        [Authorize(Roles = "Operateur")]
         [HttpPost]
         public async Task<IActionResult> PostPatient([FromBody]Patient patientDTO)
         {
@@ -80,7 +81,7 @@ namespace Back_Patient.Controllers
             var createdPatient = await _repository.CreatePatientAsync(patient);
             return Ok();
         }
-
+        [Authorize(Roles = "Operateur")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePatient(int id)
         {

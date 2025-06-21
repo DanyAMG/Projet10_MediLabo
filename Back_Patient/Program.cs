@@ -1,6 +1,9 @@
 using Back_Patient.Data;
 using Back_Patient.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,23 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<LocalDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MediLaboConnectionString")));
+
+var jwtKey = builder.Configuration["Jwt:Key"];
+var validIssuer = builder.Configuration["Jwt:ValidIssuer"];
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = validIssuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+
+        };
+    });
 
 builder.Services.AddCors(options =>
 {

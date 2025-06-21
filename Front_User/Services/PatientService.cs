@@ -1,4 +1,5 @@
 ﻿using Frontend.Model;
+using Frontend.Pages;
 using System.Net.Http.Json;
 
 namespace Frontend.Services
@@ -6,15 +7,17 @@ namespace Frontend.Services
     public class PatientService
     {
         private readonly HttpClient _httpClient;
-        
-        public PatientService(HttpClient httpClient)
+
+        public PatientService(IHttpClientFactory httpClient)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClient.CreateClient("AuthenticatedClient");
         }
 
         public async Task<List<PatientDTO>> GetAllPatientsAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<PatientDTO>>("https://localhost:7047/patients");
+            var patients = await _httpClient.GetFromJsonAsync<List<PatientDTO>>("patients");
+            Console.WriteLine($"Patients récupérés : {patients?.Count}");
+            return patients;
         }
 
         public async Task<PatientDTO> GetPatientByIdAsync(int id)

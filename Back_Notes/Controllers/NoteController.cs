@@ -1,5 +1,6 @@
-﻿using Back_Notes.Repositories;
-using Back_Notes.Model;
+﻿using Back_Notes.Model;
+using Back_Notes.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Back_Notes.Controllers
@@ -15,6 +16,7 @@ namespace Back_Notes.Controllers
             _repository = repository;
         }
 
+        [Authorize(Roles = "Practicien")]
         [HttpGet("patient/{patientId}")]
         public async Task<ActionResult<IEnumerable<Note>>> GetNotesAync(int patientId)
         {
@@ -26,6 +28,7 @@ namespace Back_Notes.Controllers
             return Ok(notes);
         }
 
+        [Authorize(Roles = "Practicien")]
         [HttpPost]
         public async Task<IActionResult> PostNoteAsync([FromBody]Note noteDTO)
         {
@@ -40,6 +43,7 @@ namespace Back_Notes.Controllers
             return Ok(createdNote);
         }
 
+        [Authorize(Roles = "Practicien")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutNote(string id, Note note)
         {
@@ -57,6 +61,7 @@ namespace Back_Notes.Controllers
         }
 
 
+        [Authorize(Roles = "Practicien")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNoteAsync(string id)
         {

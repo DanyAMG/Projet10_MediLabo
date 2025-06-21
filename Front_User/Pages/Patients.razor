@@ -4,6 +4,9 @@
 @page "/patients"
 
 @inject PatientService PatientService
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@inject HttpClient Http
 
 <h3>Liste des patients</h3>
 
@@ -29,10 +32,21 @@ else
 
 @code {
     List<PatientDTO>? patients;
+    bool isOperateur = false;
 
     protected override async Task OnInitializedAsync()
     {
-        patients = await PatientService.GetAllPatientsAsync();
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "jwt");
+
+        if (string.IsNullOrEmpty(token))
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+        await LoadPatients();
     }
 
     void NavigateToAddPatient()
@@ -40,6 +54,11 @@ else
         NavigationManager.NavigateTo("/patients/add");
     }
 
+    private async Task LoadPatients()
+    {
+        patients = await Http.GetFromJsonAsync<List<PatientDTO>>("https://localhost:7047/patients");
+      
+    }
     [Inject]
     NavigationManager NavigationManager { get; set; } = default!;
 }

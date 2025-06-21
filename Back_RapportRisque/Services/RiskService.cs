@@ -1,11 +1,13 @@
 ﻿using Back_RapportRisque.Model;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net.Http;
 
 namespace Back_RapportRisque.Services
 {
     public class RiskService 
     {
         private readonly HttpClient _httpClient;
+        
 
         public RiskService(HttpClient httpClient)
         {
@@ -15,7 +17,8 @@ namespace Back_RapportRisque.Services
         public async Task<string> AssessPatientRiskAsync(int patientId)
         {
             var patient = await _httpClient.GetFromJsonAsync<PatientDTO>($"patients/{patientId}");
-            var notes = await _httpClient.GetFromJsonAsync<List<NoteDTO>>($"https://localhost:7047/notes/patient/{patientId}");
+
+            var notes = await _httpClient.GetFromJsonAsync<List<NoteDTO>>($"notes/patient/{patientId}");
 
             if (patient == null)
             {

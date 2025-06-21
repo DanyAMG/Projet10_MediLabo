@@ -2,6 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Auth_Service.Model;
 using Auth_Service.DTO;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Auth_Service.Controller
 {
@@ -13,7 +17,7 @@ namespace Auth_Service.Controller
         private readonly IConfiguration _configuration;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration,RoleManager<IdentityRole> roleManager)
+        public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _configuration = configuration;
@@ -26,19 +30,72 @@ namespace Auth_Service.Controller
             var user = new ApplicationUser { UserName = registerDTO.Username };
             var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                if (registerDTO.Role != null && registerDTO.Role.Any())
-                {
-                    result = await userManager.AddToRolesAsync(identityUser, registerDTO.Roles);
+                return BadRequest(result.Errors);
+            }
 
-                    if (result.Succeeded)
+            if (registerDTO.Roles != null && registerDTO.Roles.Any())
+            {
+                foreach (var role in registerDTO.Roles)
+                {
+                    if (!await _roleManager.RoleExistsAsync(role))
                     {
-                        return Ok("User was registered. Please login");
+                        await _roleManager.CreateAsync(new IdentityRole(role));
                     }
                 }
+
+                var roleResult = await _userManager.AddToRolesAsync(user, registerDTO.Roles);
+                if (!roleResult.Succeeded)
+                {
+                    return BadRequest(roleResult.Errors);
+                }
             }
-            return BadRequest("Something went wrong");
+            return Ok("Utilisateur enregistré avec succès. Veuillez vous connecter.");
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
+        {
+            var user = await _userManager.FindByNameAsync(loginDTO.Username);
+
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDTO.Password))
+            {
+                return Unauthorized("Nom d'utilisateur ou mot de passe incorrect.");
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            foreach (var role in roles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var token = GetToken(authClaims);
+            return Ok(new
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+            expiration = token.ValidTo
+            });       
+        }
+
+        private JwtSecurityToken GetToken(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:ValidIssuer"],
+                audience: _configuration["Jwt:ValidAudience"],
+                expires: DateTime.Now.AddHours(1),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
+
+            return token;
         }
     }
 }

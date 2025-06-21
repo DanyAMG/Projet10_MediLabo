@@ -1,0 +1,43 @@
+﻿@page "/login"
+
+@using Model
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<h3>Connexion</h3>
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <InputText @bind-value="loginModel.Username" placeholder="Nom d'utilisateur'" />
+    <InputText @bind-value="loginModel.Password" placeholder="Mot de passe" type="password" />
+    <button type="submit">Se connecter</button>
+</EditForm>
+
+@code {
+    private LoginDTO loginModel = new();
+
+    private async Task HandleLogin()
+    {
+        var response = await Http.PostAsJsonAsync("https://localhost:7047/api/auth/login", loginModel);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            var token = result?.Token;
+
+            await JS.InvokeVoidAsync("localStorage.setItem", "jwt", token);
+
+            Navigation.NavigateTo("/patients");
+        }
+        else
+        {
+            Console.WriteLine("Echec de connexion");
+        }
+    }
+
+    public class LoginResponse
+    {
+        public string Token { get; set; } = "";
+    }
+}
