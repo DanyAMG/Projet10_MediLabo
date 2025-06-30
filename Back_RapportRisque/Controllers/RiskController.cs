@@ -1,6 +1,7 @@
 ﻿
 
 using Back_RapportRisque.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Back_RapportRisque.Controllers
@@ -16,6 +17,7 @@ namespace Back_RapportRisque.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Practicien")]
         [HttpGet("{patientId}")]
         public async Task<IActionResult> GetRisk(int patientId)
         {

@@ -1,11 +1,16 @@
 ﻿@using Model
 @using Services
 @using Microsoft.AspNetCore.Components.Forms
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+@using System.Text.Json
 
 @page "/patients/Edit"
 
 @inject PatientService PatientService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+@inject HttpClient Http
 
 <h3>EditPatient</h3>
 
@@ -23,12 +28,36 @@
 
 @code {
 	private bool isEditMode = false;
+	bool isOrganisateur = false;
 
 	private PatientDTO patient = new();
 	private EditContext editContext;
 
 	protected override async Task OnInitializedAsync()
 	{
+		var token = await JS.InvokeAsync<string>("localStorage.getItem", "jwt");
+
+		if (string.IsNullOrEmpty(token))
+		{
+			NavigationManager.NavigateTo("/login");
+			return;
+		}
+
+		Http.DefaultRequestHeaders.Authorization =
+			new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+		var handler = new JwtSecurityTokenHandler();
+		var jwt = handler.ReadJwtToken(token);
+
+		var roleClaims = jwt.Claims.Where(c => c.Type == ClaimTypes.Role || c.Type == "role");
+		isOrganisateur = roleClaims.Any(c => c.Value == "Organisateur");
+
+		if(!isOrganisateur)
+		{
+			NavigationManager.NavigateTo("/patients");
+			return;
+		}
+
 		editContext = new EditContext(patient);
 	}
 }
