@@ -4,14 +4,15 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 5067
+EXPOSE 7269
 
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Back_Patient/nuget.config", "Back_Patient/"]
 COPY ["Back_Patient/Back_Patient.csproj", "Back_Patient/"]
 RUN dotnet restore "./Back_Patient/Back_Patient.csproj"
 COPY . .

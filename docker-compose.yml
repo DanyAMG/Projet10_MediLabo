@@ -1,0 +1,81 @@
+services:
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Gateway_Ocelot/Dockerfile
+    ports:
+      - "7047:7047"
+      - "5092:5092"
+    depends_on:
+      - back_patient
+      - back_notes
+      - back_risk
+      - auth_service
+
+  back_patient:
+    build:
+      context: .
+      dockerfile: Back_Patient/Dockerfile
+    ports:
+      - "7269:7269"
+      - "5067:5067"
+
+  back_notes:
+    build:
+      context: .
+      dockerfile: Back_Notes/Dockerfile
+    ports:
+      - "7158:7158"
+      - "5140:5140"
+
+  back_risk:
+    build:
+      context: .
+      dockerfile: Back_RapportRisque/Dockerfile
+    ports:
+      - "7149:7149"
+      - "5141:5141"
+
+  auth_service:
+    build:
+      context: .
+      dockerfile: Auth_Service/Dockerfile
+    ports:
+      - "7271:7271"
+      - "5121:5121"
+
+  MediLaboPatientDB:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: MediLaboPatientDB
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Patient!1234
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+  MediLaboAuthDb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: MediLaboAuthDb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Auth!1234
+    ports:
+      - "1434:1433"
+    volumes:
+      - sqlserver_auth_data:/var/opt/mssql
+
+  MediLaboNotesDb:
+    image: mongo:latest
+    container_name: MediLaboDB_Note
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+volumes:
+  sqlserver_data:
+  sqlserver_auth_data:
+  mongodb_data: 
+  

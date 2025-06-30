@@ -19,6 +19,8 @@ namespace Back_Patient.Controllers
         }
 
         //Get: api/patients
+        //[Authorize(Roles = "Organisateur, Practicien")]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
@@ -31,6 +33,7 @@ namespace Back_Patient.Controllers
             return Ok(patients);
         }
 
+        [Authorize(Roles = "Organisateur, Practicien")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Patient>> GetPatientById(int id)
         {
@@ -43,7 +46,7 @@ namespace Back_Patient.Controllers
 
             return Ok(patient);
         }
-        [Authorize(Roles = "Operateur")]
+        [Authorize(Roles = "Organisateur")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPatient(int id, Patient patient)
         {
@@ -64,7 +67,7 @@ namespace Back_Patient.Controllers
             await _repository.UpdatePatientAsync(existingPatient);
             return Ok(existingPatient);
         }
-        [Authorize(Roles = "Operateur")]
+        [Authorize(Roles = "Organisateur")]
         [HttpPost]
         public async Task<IActionResult> PostPatient([FromBody]Patient patientDTO)
         {
@@ -81,7 +84,7 @@ namespace Back_Patient.Controllers
             var createdPatient = await _repository.CreatePatientAsync(patient);
             return Ok();
         }
-        [Authorize(Roles = "Operateur")]
+        [Authorize(Roles = "Organisateur")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePatient(int id)
         {
