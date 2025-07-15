@@ -2,11 +2,11 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/auth/login",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7271
+          "Host": "auth_service",
+          "Port": 5121
         }
       ],
       "UpstreamPathTemplate": "/api/auth/login",
@@ -14,11 +14,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/auth/register",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7271
+          "Host": "auth_service",
+          "Port": 5121
         }
       ],
       "UpstreamPathTemplate": "/auth/register",
@@ -33,11 +33,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/patients",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7269
+          "Host": "back_patient",
+          "Port": 5067
         }
       ],
       "UpstreamPathTemplate": "/patients",
@@ -52,11 +52,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/patients/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7269
+          "Host": "back_patient",
+          "Port": 5067
         }
       ],
       "UpstreamPathTemplate": "/patients/{id}",
@@ -71,11 +71,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/notes",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7158
+          "Host": "back_notes",
+          "Port": 5140
         }
       ],
       "UpstreamPathTemplate": "/notes",
@@ -90,11 +90,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/notes/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7158
+          "Host": "back_notes",
+          "Port": 5140
         }
       ],
       "UpstreamPathTemplate": "/notes/{everything}",
@@ -109,11 +109,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/notes/patient/{patientId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7158
+          "Host": "back_notes",
+          "Port": 5140
         }
       ],
       "UpstreamPathTemplate": "/notes/patient/{patientId}",
@@ -128,11 +128,11 @@
     },
     {
       "DownstreamPathTemplate": "/api/risk/{patientId}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7149
+          "Host": "back_risk",
+          "Port": 5141
         }
       ],
       "UpstreamPathTemplate": "/risk/{patientId}",
@@ -148,6 +148,6 @@
   ],
 
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7047"
+    "BaseUrl": "http://localhost:5092"
   }
 }

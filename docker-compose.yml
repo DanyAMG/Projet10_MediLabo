@@ -45,37 +45,25 @@ services:
       - "7271:7271"
       - "5121:5121"
 
-  MediLaboPatientDB:
+  MediLaboSQL:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: MediLaboPatientDB
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Patient!1234
     ports:
-      - "1433:1433"
-    volumes:
-      - sqlserver_data:/var/opt/mssql
-
-  MediLaboAuthDb:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: MediLaboAuthDb
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Auth!1234
-    ports:
       - "1434:1433"
     volumes:
-      - sqlserver_auth_data:/var/opt/mssql
+      - sqlserver_data:/var/opt/mssql
 
   MediLaboNotesDb:
     image: mongo:latest
     container_name: MediLaboDB_Note
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongodb_data:/data/db
 volumes:
   sqlserver_data:
-  sqlserver_auth_data:
   mongodb_data: 
   

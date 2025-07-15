@@ -35,14 +35,14 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddOcelot();
 
+builder.WebHost.UseUrls("http://0.0.0.0:5092");
+
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-    });
+    options.AddPolicy("AllowLocalhost",
+        policy => policy.WithOrigins("http://localhost:5189")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
 });
 
 var app = builder.Build();
@@ -53,7 +53,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 app.UseHttpsRedirection();
-app.UseCors();
+app.UseCors("AllowLocalhost");
 app.UseRouting();
 
 app.UseAuthentication();

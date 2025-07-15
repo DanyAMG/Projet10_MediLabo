@@ -33,6 +33,8 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+builder.WebHost.UseUrls("http://0.0.0.0:5067");
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -60,5 +62,21 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<LocalDbContext>();
+        dbContext.Database.Migrate();
+        Console.WriteLine("Database migration successful.");
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred during database migration.");
+    }
+}
 
 app.Run();

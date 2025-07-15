@@ -17,7 +17,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddTransient<AuthHeaderHandler>();
 builder.Services.AddHttpClient("AuthenticatedClient", client =>
 {
-client.BaseAddress = new Uri("https://localhost:7047");
+client.BaseAddress = new Uri("http://localhost:5092");
 })
 .AddHttpMessageHandler<AuthHeaderHandler>();
 

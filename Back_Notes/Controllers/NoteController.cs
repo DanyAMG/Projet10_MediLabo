@@ -15,6 +15,7 @@ namespace Back_Notes.Controllers
         {
             _repository = repository;
         }
+
         [AllowAnonymous]
         //[Authorize(Roles = "Practicien")]
         [HttpGet("patient/{patientId}")]
