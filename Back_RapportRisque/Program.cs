@@ -12,7 +12,7 @@ builder.Services.AddTransient<AuthHeaderHandler>();
 builder.Services.AddScoped<RiskService>();
 builder.Services.AddHttpClient<RiskService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7047/");
+    client.BaseAddress = new Uri("http://gateway:5092/");
 })
 .AddHttpMessageHandler<AuthHeaderHandler>();
 
@@ -33,6 +33,8 @@ builder.Services.AddAuthentication("Bearer")
 
         };
     });
+
+builder.WebHost.UseUrls("http://0.0.0.0:5141");
 
 builder.Services.AddCors(options =>
 {

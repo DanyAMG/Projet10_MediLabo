@@ -23,6 +23,8 @@ builder.Services.AddSingleton<MongoDbContext>();
 
 builder.Services.AddScoped<INoteRepository, NoteRepository>();
 
+builder.WebHost.UseUrls("http://0.0.0.0:5140");
+
 var jwtKey = builder.Configuration["Jwt:Key"];
 var validIssuer = builder.Configuration["Jwt:ValidIssuer"];
 builder.Services.AddAuthentication("Bearer")

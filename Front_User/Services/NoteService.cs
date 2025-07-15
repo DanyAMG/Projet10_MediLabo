@@ -14,12 +14,12 @@ namespace Frontend.Services
 
         public async Task<List<NoteDTO>>GetAllNotesByPatientIdAsync(int patientId)
         {
-            return await _httpClient.GetFromJsonAsync<List<NoteDTO>>($"https://localhost:7047/notes/patient/{patientId}");
+            return await _httpClient.GetFromJsonAsync<List<NoteDTO>>($"http://localhost:5092/notes/patient/{patientId}");
         }
 
         public async Task<NoteDTO>GetNoteByIdAsync(string id)
         {
-            return await _httpClient.GetFromJsonAsync<NoteDTO>($"https://localhost:7047/notes/{id}");
+            return await _httpClient.GetFromJsonAsync<NoteDTO>($"http://localhost:5092/notes/{id}");
         }
 
         public async Task AddNoteToPatientAsync(NoteDTO note)

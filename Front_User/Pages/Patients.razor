@@ -68,7 +68,7 @@ else
 
     private async Task LoadPatients()
     {
-        patients = await Http.GetFromJsonAsync<List<PatientDTO>>("https://localhost:7047/patients");
+        patients = await Http.GetFromJsonAsync<List<PatientDTO>>("http://localhost:5092/patients");
       
     }
     [Inject]

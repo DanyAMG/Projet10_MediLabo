@@ -22,7 +22,7 @@ namespace Frontend.Services
 
         public async Task<PatientDTO> GetPatientByIdAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<PatientDTO>($"https://localhost:7047/patients/{id}");
+            return await _httpClient.GetFromJsonAsync<PatientDTO>($"http://localhost:5092/patients/{id}");
         }
 
         public async Task AddPatientAsync(PatientDTO patient)

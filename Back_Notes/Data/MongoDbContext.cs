@@ -11,7 +11,7 @@ namespace Back_Notes.Data
         public MongoDbContext(IConfiguration configuration)
         {
             var settings = configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
-            var client = new MongoClient(settings.ConnectionString);
+            var client = new MongoClient(settings.ConnectionStrings);
             _database = client.GetDatabase(settings.DatabaseName);
         }
 
