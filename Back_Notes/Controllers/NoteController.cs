@@ -16,8 +16,7 @@ namespace Back_Notes.Controllers
             _repository = repository;
         }
 
-        [AllowAnonymous]
-        //[Authorize(Roles = "Practicien")]
+        [Authorize(Roles = "Practicien")]
         [HttpGet("patient/{patientId}")]
         public async Task<ActionResult<IEnumerable<Note>>> GetNotesAync(int patientId)
         {
@@ -29,7 +28,7 @@ namespace Back_Notes.Controllers
             return Ok(notes);
         }
 
-        //[Authorize(Roles = "Practicien")]
+        [Authorize(Roles = "Practicien")]
         [HttpPost]
         public async Task<IActionResult> PostNoteAsync([FromBody]Note noteDTO)
         {
