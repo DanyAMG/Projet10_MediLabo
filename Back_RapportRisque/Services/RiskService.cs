@@ -4,16 +4,26 @@ using System.Net.Http;
 
 namespace Back_RapportRisque.Services
 {
+    /// <summary>
+    /// Service responsible for assessing the health risk level of a patient based on medical notes and patient data.
+    /// </summary>
     public class RiskService 
     {
         private readonly HttpClient _httpClient;
-        
 
+        /// <summary>
+        /// Constructor that takes an HttpClient instance for making API calls.
+        /// </summary>
         public RiskService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
+        /// <summary>
+        /// Analyzes the patient's notes and personal information to determine a risk level.
+        /// </summary>
+        /// <param name="patientId">The ID of the patient.</param>
+        /// <returns>A string indicating the patient's risk level.</returns>
         public async Task<string> AssessPatientRiskAsync(int patientId)
         {
             var patient = await _httpClient.GetFromJsonAsync<PatientDTO>($"patients/{patientId}");
@@ -41,6 +51,7 @@ namespace Back_RapportRisque.Services
                 "Anticorps"
             };
 
+            // Count how many unique triggers terms are present in the notes
             var triggerCount = notes.Where(n => !string.IsNullOrEmpty(n.Content))
                 .SelectMany(n => triggerTerms.Where(term => n.Content.Contains(term, StringComparison.OrdinalIgnoreCase)))
                 .Distinct()
@@ -49,6 +60,7 @@ namespace Back_RapportRisque.Services
             var age = CalculateAge(patient.Birthday);
             var gender = patient.Gender;
 
+            // Determine risk level based on age, gender and the trigger count
             if (triggerCount == 0)
             {
                 return "None";
@@ -99,6 +111,11 @@ namespace Back_RapportRisque.Services
             return "None";
         }
 
+        /// <summary>
+        /// Calculates a person's age based on their birth date.
+        /// </summary>
+        /// <param name="birthday">The date of birth.</param>
+        /// <returns>The calculated age.</returns>
         private int CalculateAge(DateTime birthday)
         {
             var today = DateTime.Now;

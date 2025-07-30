@@ -83,7 +83,7 @@ This will reduces memory usage and network loads.
 - Stop unusued Docker containers : To minimize the background resource consumption, make sure to stop the Docker containers
 when they are not actively used during development. Running containers consume CPU and memory.
 
-Auteurs
+Author
 Dany MOTA as part of a personal learning project.
 
 License

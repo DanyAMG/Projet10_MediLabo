@@ -2,8 +2,17 @@
 
 namespace Frontend.Services
 {
+    /// <summary>
+    /// Service to extract user roles from a JWT token.
+    /// </summary>
     public class RolesService
     {
+        /// <summary>
+        /// Extracts the roles from the payload of a JWT token.
+        /// Handles both single role as string or multiple roles as an array.
+        /// </summary>
+        /// <param name="jwtToken">The JSON Web Token string.</param>
+        /// <returns>A list of roles found in the token; empty if none found or token invalid.</returns>
         public List<string> GetRolesFromToken(string jwtToken)
         {
             var parts = jwtToken.Split('.');

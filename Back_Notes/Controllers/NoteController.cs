@@ -5,17 +5,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Back_Notes.Controllers
 {
+    /// <summary>
+    /// Controller who's managing notes related to a patient
+    /// </summary>
     [ApiController]
     [Route("api/notes")]
     public class NoteController : ControllerBase
     {
         private readonly INoteRepository _repository;
 
+        // Constructor with dependency injection of the Note Repository
         public NoteController(INoteRepository repository)
         {
             _repository = repository;
         }
 
+
+        /// <summary>
+        /// Get all notes linked to a specific patient.
+        /// </summary>
+        /// <param name="patientId"> The patient's unique identifiant</param>
+        /// <returns></returns>
         [Authorize(Roles = "Practicien")]
         [HttpGet("patient/{patientId}")]
         public async Task<ActionResult<IEnumerable<Note>>> GetNotesAync(int patientId)
@@ -28,6 +38,11 @@ namespace Back_Notes.Controllers
             return Ok(notes);
         }
 
+        /// <summary>
+        /// Creates a new note for a patient.
+        /// </summary>
+        /// <param name="noteDTO">The note data sent from the client</param>
+        /// <returns>The created note</returns>
         [Authorize(Roles = "Practicien")]
         [HttpPost]
         public async Task<IActionResult> PostNoteAsync([FromBody]Note noteDTO)
@@ -43,6 +58,12 @@ namespace Back_Notes.Controllers
             return Ok(createdNote);
         }
 
+        /// <summary>
+        /// Updates the content of an existing note.
+        /// </summary>
+        /// <param name="id">The note's unique identifiant</param>
+        /// <param name="note">The updated note object</param>
+        /// <returns>The updated note or 404 if not found</returns>
         [Authorize(Roles = "Practicien")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutNote(string id, Note note)
@@ -60,7 +81,11 @@ namespace Back_Notes.Controllers
             return Ok(existingNote);
         }
 
-
+        /// <summary>
+        /// Deletes a note by its ID.
+        /// </summary>
+        /// <param name="id">The note's unique identifiant</param>
+        /// <returns>200 OK or 404 if the note doesn't exist</returns>
         [Authorize(Roles = "Practicien")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNoteAsync(string id)
