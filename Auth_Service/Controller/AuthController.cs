@@ -9,6 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Auth_Service.Controller
 {
+    /// <summary>
+    /// Controller to manage user authentication: registration and login.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
@@ -17,6 +20,9 @@ namespace Auth_Service.Controller
         private readonly IConfiguration _configuration;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        /// <summary>
+        /// Initializes a new instance of the AuthController class.
+        /// </summary>
         public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
@@ -24,6 +30,11 @@ namespace Auth_Service.Controller
             _roleManager = roleManager;
         }
 
+        /// <summary>
+        /// Registers a new user with the provided credentials and roles.
+        /// </summary>
+        /// <param name="registerDTO">The registration data (username, password, roles).</param>
+        /// <returns>An IActionResult indicating the result of the operation.</returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
@@ -54,6 +65,11 @@ namespace Auth_Service.Controller
             return Ok("Utilisateur enregistré avec succès. Veuillez vous connecter.");
         }
 
+        /// <summary>
+        /// Authenticates a user and returns a JWT token if the credentials are valid.
+        /// </summary>
+        /// <param name="loginDTO">The login data (username and password).</param>
+        /// <returns>A JWT token and its expiration time if authentication succeeds.</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
@@ -85,6 +101,11 @@ namespace Auth_Service.Controller
             });       
         }
 
+        /// <summary>
+        /// Generates a JWT token based on the provided claims.
+        /// </summary>
+        /// <param name="authClaims">The claims to include in the token.</param>
+        /// <returns>A JwtSecurityToken containing the claims.</returns>
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
