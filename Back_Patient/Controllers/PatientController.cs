@@ -19,8 +19,7 @@ namespace Back_Patient.Controllers
         }
 
         //Get: api/patients
-        //[Authorize(Roles = "Organisateur, Practicien")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Organisateur, Practicien")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
