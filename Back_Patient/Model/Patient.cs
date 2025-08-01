@@ -21,8 +21,8 @@ namespace Back_Patient.Model
         [Required]
         public bool Gender { get; set; }
 
-        public string Adress {  get; set; }
+        public string? Adress {  get; set; }
         
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }
