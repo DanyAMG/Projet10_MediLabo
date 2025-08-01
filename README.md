@@ -69,6 +69,14 @@ AUTHENTICATION
 using a HttpMessageHandler.
 - Access to protected resources is restricted with authentication.
 
+Existing Users : 
+Role [Practicien]
+User : Practicien
+Password : Pract123!
+
+Role [Organisateur]
+User : Organisateur
+Password : Orga123!
 
 NOTES
 - Patient and Users data are stored in SQL Server (Dockerized).
