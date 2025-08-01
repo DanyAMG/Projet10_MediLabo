@@ -2,14 +2,10 @@
 @inject NavigationManager Navigation
 
 @page "/"
-<button class="btn btn-danger" @onclick="Logoff">Se déconnecter</button>
+@* <button class="btn btn-danger" @onclick="Logoff">Se déconnecter</button> *@
 <h1>Interface Patient</h1>
 <Patients/>
 
 @code {
-    private async Task Logoff()
-    {
-        await JS.InvokeVoidAsync("localStorage.removeItem", "jwt");
-        Navigation.NavigateTo("/login", forceLoad: true);
-    }
+    
 }

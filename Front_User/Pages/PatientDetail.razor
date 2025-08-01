@@ -1,10 +1,18 @@
 ﻿@using Model
 @using Services
 @using Microsoft.AspNetCore.Components.Forms
+@using System.IdentityModel.Tokens.Jwt
+@using System.Security.Claims
+@using System.Text.Json
 
 @page "/patients/{Id:int}"
+
 @inject PatientService PatientService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+@inject HttpClient Http
+
+<button class="btn btn-secondary ms-2" @onclick="NavigateHome">Accueil</button>
 
 <h3>Détails du Patient</h3>
 
@@ -23,10 +31,16 @@ else
         <p><strong>Téléphone :</strong> @patient.PhoneNumber</p>
         <p><strong>Genre :</strong> @(patient.Gender ? "Homme" : "Femme")</p>
 
+        @if (isOrganisateur)
+        {
         <button class="btn btn-primary" @onclick="() => isEditMode = true">Éditer</button>
+        }
 
-        <PatientRisk PatientId="@patient.PatientId" />
-        <PatientNotes PatientId="@patient.PatientId" />
+        @if (isPracticien)
+        {
+            <PatientRisk PatientId="@patient.PatientId" />
+            <PatientNotes PatientId="@patient.PatientId" />
+        }
     }
     else
     {
@@ -86,10 +100,22 @@ else
 
     private PatientDTO? patient;
     private bool isEditMode = false;
+    private bool isOrganisateur = false;
+    private bool isPracticien = false;
 
 	protected override async Task OnInitializedAsync()
 	{
 		patient = await PatientService.GetPatientByIdAsync(Id);
+
+        var token = await JS.InvokeAsync<string>("localStorage.getItem", "jwt");
+        if (!string.IsNullOrEmpty(token))
+        {
+            var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(token);
+            var roleClaims = jwt.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role || c.Type == "role");
+            isOrganisateur = roleClaims.Any(c => c.Value == "Organisateur");
+            isPracticien = roleClaims.Any(c => c.Value == "Practicien");
+        }
 	}
 
     private async Task HandleUpdatePatient()
@@ -98,6 +124,11 @@ else
         {
             await PatientService.EditPatientAsync(patient.PatientId, patient);
             isEditMode = false;
+
         }
+    }
+    private void NavigateHome()
+    {
+        NavigationManager.NavigateTo("/");
     }
 }

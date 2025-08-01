@@ -1,5 +1,17 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
 
-<main>
-    @Body
-</main>
+<div class="top-bar">
+    <button class="btn btn-danger" @onclick="Logoff">Se déconnecter</button>
+</div>
+
+@Body
+
+@code {
+    private async Task Logoff()
+    {
+        await JS.InvokeVoidAsync("localStorage.removeItem", "jwt");
+        Navigation.NavigateTo("/login", forceLoad: true);
+    }
+}
